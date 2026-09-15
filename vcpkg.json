@@ -1,0 +1,7 @@
+{
+	"name": "outlying-filling",
+	"version-string": "0.1.0",
+	"dependencies": [
+		"eigen3"
+	]
+}
