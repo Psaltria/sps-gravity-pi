@@ -8,6 +8,14 @@ project(
 
 # Add dependencies ----------------------------------
 find_package(Eigen3 CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(
+    GPHOTO2
+    REQUIRED
+    IMPORTED_TARGET
+    libgphoto2
+)
 
 # Main executable -----------------------------------
 add_executable(${PROJECT_NAME})
@@ -21,6 +29,7 @@ set_target_properties(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
 	Eigen3::Eigen
+    PkgConfig::GPHOTO2
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
