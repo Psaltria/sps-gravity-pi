@@ -34,9 +34,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 target_sources(${PROJECT_NAME} PRIVATE
     "src/main.cpp" 
-)
+ "include/cam/Camera_system.h" "src/cam/Camera_system.cpp")
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        #${PROJECT_SOURCE_DIR}/external/misc
+        "${PROJECT_SOURCE_DIR}/include"
 )
