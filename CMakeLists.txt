@@ -10,22 +10,29 @@ project(
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 
-find_path(CSPICE_INCLUDE_DIR
-    NAMES SpiceUsr.h
-    PATH_SUFFIXES cspice
-    REQUIRED
-)
-
-find_library(CSPICE_LIBRARY
-    NAMES cspice
-    REQUIRED
-)
-
 pkg_check_modules(
     GPHOTO2
     REQUIRED
     IMPORTED_TARGET
     libgphoto2
+)
+
+set(CSPICE_ROOT "${CMAKE_SOURCE_DIR}/external/cspice")
+
+add_library(CSPICE::cspice STATIC IMPORTED)
+
+set_target_properties(CSPICE::cspice PROPERTIES
+    IMPORTED_LOCATION
+        "${CSPICE_ROOT}/lib/cspice.a"
+
+    INTERFACE_INCLUDE_DIRECTORIES
+        "${CSPICE_ROOT}/include"
+)
+
+target_link_libraries(sps-gravity-pi
+    PRIVATE
+        CSPICE::cspice
+        m
 )
 
 # Main executable -----------------------------------
@@ -41,7 +48,6 @@ set_target_properties(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC
 	Eigen3::Eigen
     PkgConfig::GPHOTO2
-    ${CSPICE_LIBRARY}
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -51,7 +57,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         "${PROJECT_SOURCE_DIR}/include"
-        "${CSPICE_INCLUDE_DIR}"
 )
 
 add_custom_command(
