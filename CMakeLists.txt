@@ -10,6 +10,17 @@ project(
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 
+find_path(CSPICE_INCLUDE_DIR
+    NAMES SpiceUsr.h
+    PATH_SUFFIXES cspice
+    REQUIRED
+)
+
+find_library(CSPICE_LIBRARY
+    NAMES cspice
+    REQUIRED
+)
+
 pkg_check_modules(
     GPHOTO2
     REQUIRED
@@ -30,13 +41,22 @@ set_target_properties(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC
 	Eigen3::Eigen
     PkgConfig::GPHOTO2
+    ${CSPICE_LIBRARY}
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
     "src/main.cpp" 
- "include/cam/Camera_system.h" "src/cam/Camera_system.cpp")
+ "include/cam/Camera_system.h" "src/cam/Camera_system.cpp" "include/gravity/n_body.h")
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         "${PROJECT_SOURCE_DIR}/include"
+        "${CSPICE_INCLUDE_DIR}"
+)
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/kernels"
+            "$<TARGET_FILE_DIR:sps-gravity-pi>/kernels"
 )

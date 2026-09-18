@@ -1,7 +1,8 @@
 {
-	"name": "outlying-filling",
-	"version-string": "0.1.0",
-	"dependencies": [
-		"eigen3"
-	]
+  "name": "sps-gravity-pi",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "eigen3",
+    "cspice"
+  ]
 }
